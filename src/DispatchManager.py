@@ -12,12 +12,12 @@ import pickle as pk
 from time import time as run_clock
 
 import numpy as np
-from typing_extensions import final
+from .typing_extensions import final
 
 # set up path
 #sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import HERON.src._utils as hutils
-from HERON.src import SerializationManager
+from . import _utils as hutils
+from . import SerializationManager
 
 raven_path = hutils.get_raven_loc()
 sys.path.append(raven_path)
