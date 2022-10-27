@@ -153,7 +153,7 @@ class ValuedParamHandler(MessageUser):
       @ Out,
     """
     # should this be allowed if it's not parametric?
-    assert isinstance(self._vp, Parametric)
+    assert isinstance(self._vp, Parametric) or self._vp.__class__.__module__ == Parametric.__module__
     return self._vp.set_value(value)
 
   def get_coefficients(self):
