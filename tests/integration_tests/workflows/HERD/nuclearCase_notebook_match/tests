@@ -2,7 +2,8 @@
  [./NuclearCaseNotebookMatch]
   type = HeronMoped
   input = dispatches_input.xml
-  max_time = 600
+  max_time = 800
+  #heavy = true
   [./csv]
     type = OrderedCSV
     output = 'opt_solution__nuclearCase_notebook_match.csv'
