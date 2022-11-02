@@ -6,7 +6,7 @@ jobs:
     runs-on: self-hosted
     steps:
       - run: echo " The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo " This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo " This job is now running on a ${{ runner.os }} server"
       - run: echo " The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v3
@@ -15,4 +15,4 @@ jobs:
       - run: python3 ../raven/scripts/install_plugins.py -s TEAL
       - run: python3 ../raven/scripts/install_plugins.py -s ${{ github.workspace }}
       - run: ../raven/scripts/establish_conda_env.sh --install
-      - run: ../raven/build_raven
+      - run: cd ../raven && ./build_raven
