@@ -34,8 +34,9 @@ try:
   HERON_src_path = HERON.src.__path__[0]
 except ModuleNotFoundError:
   # # Importing XML utility from RAVEN to make the output XML file looks pretty
-  HERON_src_path = "HERON".join(__file__.split("HERON")[:-1])+"HERON/src"
-  print("file and path", __file__, HERON_src_path)
+  this_file = os.path.abspath(__file__)
+  HERON_src_path = "HERON".join(this_file.split("HERON")[:-1])+"HERON/src"
+  print("file and path", this_file, HERON_src_path)
   sys.path.append(HERON_src_path)
   from _utils import get_raven_loc
   sys.path.append(get_raven_loc())
