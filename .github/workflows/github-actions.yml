@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is testing out HERON
 on: [push]
 jobs:
   Test-HERON-Action-Linux:
-    runs-on: [self-hosted, linux]
+    runs-on: ubuntu-latest
     steps:
       - run: echo " The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo " This job is now running on a ${{ runner.os }} server"
@@ -19,7 +19,7 @@ jobs:
       - run: ../raven/run_tests --library-report
       - run: ../raven/run_tests -j4 --plugins --re=HERON
   Test-HERON-Action-Windows:
-    runs-on: [self-hosted, windows]
+    runs-on: windows-latest
     steps:
       - run: echo " The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo " This job is now running on a ${{ runner.os }} server"
