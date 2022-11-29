@@ -28,6 +28,10 @@ jobs:
       - run: echo " The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
       - name: Check out repository code
         uses: actions/checkout@v3
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v3
+        with:
+          python-version: 3.7
       - run: pwd
       - run: conda info
       - run: cd ..; if (Test-Path raven) {Remove-Item -Recurse -Force raven}; git clone https://github.com/idaholab/raven.git
