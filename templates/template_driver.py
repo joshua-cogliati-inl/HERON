@@ -10,6 +10,9 @@ import copy
 import shutil
 import xml.etree.ElementTree as ET
 import itertools as it
+import socket
+import glob
+import re
 
 import numpy as np
 import dill as pk
@@ -237,6 +240,21 @@ class Template(TemplateBase, Base):
     elif case.get_mode() == 'opt':
       template.find('Samplers').remove(template.find(".//Grid[@name='grid']"))
 
+  def _get_parallel_xml(self, hostname):
+    """
+      Finds the xml file to go with the given hostname.
+      @ In, hostname, string with the hostname to search for
+      @ Out, xml, xml.eTree.ElementTree or None, if an xml file is found then use it, otherwise return None
+    """
+    path = os.path.join(os.path.dirname(__file__),"parallel","*.xml")
+    filenames = glob.glob(path)
+    for filename in filenames:
+      cur_xml = ET.parse(filename).getroot()
+      regexp = cur_xml.attrib['hostregexp']
+      if re.match(regexp, hostname):
+        return cur_xml
+    return None
+
   def _modify_outer_runinfo(self, template, case):
     """
       Defines modifications to the RunInfo of outer.xml RAVEN input file.
@@ -257,15 +275,30 @@ class Template(TemplateBase, Base):
     elif case.get_mode() == 'opt':
       run_info.find('Sequence').text = 'optimize, plot'
     # parallel
+    hostname = socket.gethostbyaddr(socket.gethostname())[0]
+    parallel_xml = self._get_parallel_xml(hostname)
+    #note, parallel_xml might be None
     if case.outerParallel:
       # set outer batchsize and InternalParallel
       batchSize = run_info.find('batchSize')
       batchSize.text = f'{case.outerParallel}'
-      run_info.append(xmlUtils.newNode('internalParallel', text='True'))
+      if parallel_xml is None:
+        run_info.append(xmlUtils.newNode('internalParallel', text='True'))
+      else:
+        #append all the children in the 'outer' element
+        for child in parallel_xml.find('outer'):
+          run_info.append(child)
     if case.useParallel:
-      #XXX this doesn't handle non-mpi modes like torque or other custom ones
-      mode = xmlUtils.newNode('mode', text='mpi')
-      mode.append(xmlUtils.newNode('runQSUB'))
+      if parallel_xml is None:
+        #XXX this doesn't handle non-mpi modes like torque or other custom ones
+        mode = xmlUtils.newNode('mode', text='mpi')
+        mode.append(xmlUtils.newNode('runQSUB'))
+      else:
+        for child in parallel_xml.find('useParallel'):
+          if child.tag == 'mode':
+            mode = child
+          else:
+            run_info.append(child)
       if 'memory' in case.parallelRunInfo:
         mode.append(xmlUtils.newNode('memory', text=case.parallelRunInfo.pop('memory')))
       for sub in case.parallelRunInfo:
