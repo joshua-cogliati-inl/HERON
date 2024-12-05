@@ -2,9 +2,7 @@
   <useParallel>
     <mode>slurm
       <runSbatch />
-      <memory>64gb</memory>
     </mode>
-    <NumMPI>10</NumMPI>
   </useParallel>
   <outer>
     <parallelMethod>dask</parallelMethod>

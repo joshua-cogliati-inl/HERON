@@ -3,9 +3,7 @@
     <mode>
       mpi
       <runQSUB />
-      <memory>16gb</memory>
     </mode>
-    <NumMPI>10</NumMPI>
   </useParallel>
   <outer>
     <parallelMethod>ray</parallelMethod>
