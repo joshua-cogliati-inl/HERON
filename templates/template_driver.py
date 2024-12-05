@@ -246,6 +246,8 @@ class Template(TemplateBase, Base):
       @ In, hostname, string with the hostname to search for
       @ Out, xml, xml.eTree.ElementTree or None, if an xml file is found then use it, otherwise return None
     """
+    # Should this allow loading from another directory (such as one
+    #  next to the input file?)
     path = os.path.join(os.path.dirname(__file__),"parallel","*.xml")
     filenames = glob.glob(path)
     for filename in filenames:
@@ -275,6 +277,8 @@ class Template(TemplateBase, Base):
     elif case.get_mode() == 'opt':
       run_info.find('Sequence').text = 'optimize, plot'
     # parallel
+    # Should there be a way to override the hostname (such as if we are
+    #  generating the files to run on a different computer?)
     hostname = socket.gethostbyaddr(socket.gethostname())[0]
     self.parallel_xml = self._get_parallel_xml(hostname)
     #note, parallel_xml might be None
